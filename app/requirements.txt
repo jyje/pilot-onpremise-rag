@@ -1,0 +1,8 @@
+# Core dependencies
+python-dotenv < 2.0
+loguru < 0.8
+
+# Development
+pytest < 8.4
+black < 26.0
+ruff < 0.12

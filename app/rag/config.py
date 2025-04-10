@@ -45,12 +45,40 @@ def setup_logger(log_level: str):
         format = lambda record: CONSOLE_FORMAT_SIMPLE if record["level"].name == "INFO" else CONSOLE_FORMAT_FULL,
         colorize = True
     )
-    
-    logger.debug(f"Logger configured with level: {log_level}")
 
 
 class EnvDefault(argparse.Action):
-    """Argparse action that uses environment variables as defaults"""
+    """Custom argparse action that uses environment variables as defaults.
+
+    This action extends the standard argparse.Action to support reading default values
+    from environment variables. If the specified environment variable exists, its value
+    will be used as the default value for the argument.
+
+    For boolean flags (store_true/store_false), the environment variable is interpreted
+    as a boolean value where 'true', '1', 'yes', or 'on' (case-insensitive) are
+    considered True.
+
+    Args:
+        envvar (str): Name of the environment variable to use as default
+        required (bool, optional): Whether the argument is required. Defaults to True.
+            Note: If a default value is found in environment variables, required is set to False.
+        default (Any, optional): Default value if environment variable is not set. Defaults to None.
+        **kwargs: Additional arguments passed to argparse.Action
+
+    Example:
+        ```python
+        parser.add_argument(
+            '--log-level',
+            envvar='LOG_LEVEL',
+            help='Logging level',
+            default='INFO',
+            action=EnvDefault
+        )
+        ```
+
+    Note:
+        The help text is automatically updated to include the environment variable name.
+    """
     def __init__(self, envvar, required=True, default=None, **kwargs):
         if envvar and envvar in os.environ:
             env_value = os.environ[envvar]
