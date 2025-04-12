@@ -1,0 +1,50 @@
+## -- IaC
+# 1. [x] Vector Database (Milvus)
+# 2. [x] Data Warehouse (MinIO)
+# 3. [ ] LLM Server (OpenAI Compatible)
+# 4. [ ] RAG System (FastAPI)
+
+name: pilot-onpremise-rag
+services:
+  # Vector Database
+  vectordb-milvus-etcd:
+    build:
+      context: .
+    extends:
+      file: milvus-compose.yaml
+      service: vectordb-milvus-etcd
+
+  vectordb-milvus-minio:
+    build:
+      context: .
+    extends:
+      file: milvus-compose.yaml
+      service: vectordb-milvus-minio
+
+  vectordb-milvus-standalone:
+    build:
+      context: .
+    extends:
+      file: milvus-compose.yaml
+      service: vectordb-milvus-standalone
+
+  vectordb-milvus-attu:
+    build:
+      context: .
+    extends:
+      file: milvus-compose.yaml
+      service: vectordb-milvus-attu
+
+  # Data Warehouse
+  warehouse-minio:
+    build:
+      context: .
+    extends:
+      file: minio-compose.yaml
+      service: warehouse-minio
+
+volumes:
+  warehouse-minio-data:
+  vectordb-milvus-minio-data:
+  vectordb-milvus-etcd-data:
+  vectordb-milvus-standalone-data:

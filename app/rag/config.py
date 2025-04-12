@@ -136,7 +136,7 @@ top_parser.add_argument(
     '--log-path',
     envvar = 'LOG_PATH',
     help = 'Path to log file',
-    default = 'app/logs',
+    default = '.logs',
     type = str,
     required = False,
     action = EnvDefault,
