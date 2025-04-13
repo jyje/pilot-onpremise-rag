@@ -1,2 +1,2 @@
-from .config import parser
+from .config import parser, help
 from .router import route

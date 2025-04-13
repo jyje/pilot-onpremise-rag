@@ -6,10 +6,10 @@ from loguru import logger
 load_dotenv(dotenv_path=os.environ.get('ENV_FILE', '.env'), override=True)
 
 from rag.config import top_parser, common_parser, setup_logger
-from rag.doctor import parser as doctor_parser, route as doctor_route
-from rag.train import parser as train_parser, route as train_route
-from rag.ask import parser as ask_parser, route as ask_route
-from rag.test import parser as test_parser, route as test_route
+from rag.doctor import help as doctor_help, parser as doctor_parser, route as doctor_route
+from rag.train import help as train_help, parser as train_parser, route as train_route
+from rag.ask import help as ask_help, parser as ask_parser, route as ask_route
+from rag.test import help as test_help, parser as test_parser, route as test_route
 
 # Main parser
 parser = argparse.ArgumentParser(
@@ -27,7 +27,7 @@ subparsers = parser.add_subparsers(
 
 subparsers.add_parser(
     'doctor',
-    help = doctor_parser.description,
+    help = doctor_help,
     description = doctor_parser.description,
     parents = [top_parser, common_parser, doctor_parser],
     add_help = False,
@@ -35,7 +35,7 @@ subparsers.add_parser(
 
 subparsers.add_parser(
     'train',
-    help = train_parser.description,
+    help = train_help,
     description = train_parser.description,
     parents = [top_parser, common_parser, train_parser],
     add_help = False,
@@ -43,7 +43,7 @@ subparsers.add_parser(
 
 subparsers.add_parser(
     'test',
-    help = test_parser.description,
+    help = test_help,
     description = test_parser.description,
     parents = [top_parser, common_parser, test_parser],
     add_help = False,
@@ -51,7 +51,7 @@ subparsers.add_parser(
 
 subparsers.add_parser(
     'ask',
-    help = ask_parser.description,
+    help = ask_help,
     description = ask_parser.description,
     parents = [top_parser, common_parser, ask_parser],
     add_help = False,
@@ -61,8 +61,8 @@ subparsers.add_parser(
 if __name__ == '__main__':
     args = parser.parse_args()
 
-    command = f"with command: {args.command}" if args.command else ""
-    logger.info(f"RAG Started {command}")
+    command_message = f"with command: {args.command}" if args.command else ""
+    logger.info(f"RAG Started {command_message}")
     
     setup_logger(args.log_level)
     logger.debug(f"Parsed arguments: {args}")
@@ -76,4 +76,4 @@ if __name__ == '__main__':
     elif args.command == 'test':
         test_route(args)
     else:
-        raise ValueError(f"Invalid command: {args.command}")
+        parser.print_help()

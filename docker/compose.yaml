@@ -1,6 +1,6 @@
 ## -- IaC
-# 1. [x] Vector Database (Milvus)
-# 2. [x] Data Warehouse (MinIO)
+# 1. [x] Vector Database (Milvus -> http://localhost:19540)
+# 2. [x] Data Warehouse (MinIO -> http://localhost:19011)
 # 3. [ ] LLM Server (OpenAI Compatible)
 # 4. [ ] RAG System (FastAPI)
 

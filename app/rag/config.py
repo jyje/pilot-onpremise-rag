@@ -8,7 +8,7 @@ FILE_FORMAT = f"{TIME_FORMAT} | {{level: <8}} | {{name}}:{{function}}:{{line}} -
 CONSOLE_FORMAT_FULL = f"<green>{TIME_FORMAT}</green> | <level>{{level: <8}}</level> | <cyan>{{name}}</cyan>:<cyan>{{function}}</cyan>:<cyan>{{line}}</cyan> - <level>{{message}}</level>\n"
 CONSOLE_FORMAT_SIMPLE = f"<green>{TIME_FORMAT}</green> | <level>{{level: <8}}</level> | <level>{{message}}</level>\n"
 
-# Initial logger setup
+# Initial logger setup before setup_logger()
 logger.remove()
 logger.add(
     sink = sys.stderr,
