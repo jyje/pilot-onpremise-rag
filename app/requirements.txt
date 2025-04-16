@@ -6,3 +6,6 @@ loguru < 0.8
 pytest < 8.4
 black < 26.0
 ruff < 0.12
+
+# RAG
+pymilvus < 2.6
