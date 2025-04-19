@@ -27,15 +27,20 @@
 git clone https://github.com/jyje/pilot-onpremise-rag
 cd pilot-onpremise-rag
 
-docker compose -f docker/compose.yaml up -d
+docker compose -f docker/compose.yaml up
 ```
 
-### Install pirag
+### Install pirag from source
 ```bash
 git clone https://github.com/jyje/pilot-onpremise-rag
 cd pilot-onpremise-rag
 
-pip install --upgrade -e ./app
+pip install --upgrade -e .
+```
+
+### Install pirag from PyPI
+```bash
+pip install --upgrade pirag
 ```
 
 ## 📚 Usage

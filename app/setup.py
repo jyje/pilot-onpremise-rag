@@ -16,8 +16,7 @@ APP_NAME = "pirag"
 setup(
     name = APP_NAME,
     version = version,
-    packages = [".", "rag"],
-    package_dir = {"": ".", "rag": "rag"},
+    packages = find_packages(),
     include_package_data = True,
     install_requires = requirements,
     entry_points = {

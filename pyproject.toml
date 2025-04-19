@@ -1,6 +1,6 @@
 [project]
 name = "pirag"
-version = "0.1.0"
+version = "0.1.1"
 description = "CLI Projects of On-Premise RAG. You can use your own LLM and vector DB. Or just add remote LLM servers and vector DB."
 authors = [
     { name="semir4in", email="semir4in@gmail.com" },
@@ -29,11 +29,8 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["app", "app.rag"]
-
-[tool.setuptools.package-dir]
-app = "app"
-"app.rag" = "app/rag"
+packages = {find = {namespaces = true}}
+include-package-data = true
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["app/requirements.txt"]}
