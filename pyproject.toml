@@ -1,6 +1,6 @@
 [project]
 name = "pirag"
-version = "0.1.2"
+version = "0.1.3"
 description = "CLI Projects of On-Premise RAG. You can use your own LLM and vector DB. Or just add remote LLM servers and vector DB."
 authors = [
     { name="semir4in", email="semir4in@gmail.com" },
