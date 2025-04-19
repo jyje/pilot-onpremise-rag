@@ -3,34 +3,35 @@ from pathlib import Path
 from loguru import logger
 
 # Logger format constants
-TIME_FORMAT = "{time:YYYY-MM-DD HH:mm:ss.SSS!UTC}Z"
-FILE_FORMAT = f"{TIME_FORMAT} | {{level: <8}} | {{name}}:{{function}}:{{line}} - {{message}}"
-CONSOLE_FORMAT_FULL = f"<green>{TIME_FORMAT}</green> | <level>{{level: <8}}</level> | <cyan>{{name}}</cyan>:<cyan>{{function}}</cyan>:<cyan>{{line}}</cyan> - <level>{{message}}</level>\n"
-CONSOLE_FORMAT_SIMPLE = f"<green>{TIME_FORMAT}</green> | <level>{{level: <8}}</level> | <level>{{message}}</level>\n"
+LOG_TIME_FORMAT = "{time:YYYY-MM-DD HH:mm:ss.SSS!UTC}Z"
+LOG_FILE_FORMAT = f"{LOG_TIME_FORMAT} | {{level: <8}} | {{name}}:{{function}}:{{line}} - {{message}}"
+LOG_CONSOLE_FORMAT_FULL = f"<green>{LOG_TIME_FORMAT}</green> | <level>{{level: <8}}</level> | <cyan>{{name}}</cyan>:<cyan>{{function}}</cyan>:<cyan>{{line}}</cyan> - <level>{{message}}</level>\n"
+LOG_CONSOLE_FORMAT_SIMPLE = f"<green>{LOG_TIME_FORMAT}</green> | <level>{{level: <8}}</level> | <level>{{message}}</level>\n"
 
 # Initial logger setup before setup_logger()
 logger.remove()
 logger.add(
     sink = sys.stderr,
     level = "INFO", 
-    format = lambda record: CONSOLE_FORMAT_SIMPLE if record["level"].name == "INFO" else CONSOLE_FORMAT_FULL,
+    format = lambda record: LOG_CONSOLE_FORMAT_SIMPLE if record["level"].name == "INFO" else LOG_CONSOLE_FORMAT_FULL,
     colorize = True
 )
 
-def setup_logger(log_level: str):
+def setup_logger(log_level: str, log_dir: str):
     """Configure logger with specified level and outputs"""
+    
+    log_dir = Path(log_dir)
+    log_dir.mkdir(exist_ok=True, parents=True)
     
     logger.remove()
     
-    log_dir = Path("app/logs")
-    log_dir.mkdir(exist_ok=True, parents=True)
-    
     # File handler
     logger.add(
-        sink = log_dir / "app.log",
+        sink = log_dir / "{time:YYYYMMDD-HHmmss!UTC}Z.log",
         level = log_level,
-        rotation = "500 MB",
-        format = FILE_FORMAT,
+        rotation = "100 MB",
+        retention = 0,
+        format = LOG_FILE_FORMAT,
         serialize = False,
         enqueue = True,
         backtrace = True,
@@ -42,7 +43,7 @@ def setup_logger(log_level: str):
     logger.add(
         sink = sys.stderr,
         level = log_level,
-        format = lambda record: CONSOLE_FORMAT_SIMPLE if record["level"].name == "INFO" else CONSOLE_FORMAT_FULL,
+        format = lambda record: LOG_CONSOLE_FORMAT_SIMPLE if record["level"].name == "INFO" else LOG_CONSOLE_FORMAT_FULL,
         colorize = True
     )
 
@@ -133,10 +134,10 @@ top_parser.add_argument(
 )
 
 top_parser.add_argument(
-    '--log-path',
-    envvar = 'LOG_PATH',
-    help = 'Path to log file',
-    default = '.logs',
+    '--log-dir',
+    envvar = 'LOG_DIR',
+    help = 'Path to log directory',
+    default = '.pirag/logs',
     type = str,
     required = False,
     action = EnvDefault,

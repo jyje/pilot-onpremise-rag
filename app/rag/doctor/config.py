@@ -1,5 +1,7 @@
 import argparse
 
+from app.rag.config import top_parser, common_parser
+
 help = "Diagnose the RAG system."
 
 parser = argparse.ArgumentParser(
@@ -17,4 +19,6 @@ subparsers.add_parser(
     "check",
     help = "Check RAG System. Scan all components of the system and diagnose status",
     description = "Check RAG System. Scan all components of the system and diagnose status",
+    parents = [top_parser, common_parser],
+    add_help = False,
 )

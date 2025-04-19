@@ -62,7 +62,10 @@ def main():
     command_message = f"with command: {args.command}" if args.command else ""
     logger.info(f"RAG Started {command_message}")
     
-    setup_logger(args.log_level)
+    setup_logger(
+        log_level = args.log_level,
+        log_dir = args.log_dir,
+    )
     logger.debug(f"Parsed arguments: {args}")
 
     if args.command == 'doctor':
