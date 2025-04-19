@@ -103,3 +103,11 @@ pilot-onpremise-rag/
 - [LangChain Documentation](https://python.langchain.com/docs/get_started/introduction)
 - [LLM Optimization Techniques](https://huggingface.co/docs/optimum/index)
 - [RAG Paper](https://arxiv.org/abs/2005.11401)
+
+## Contributing
+
+Any contributions are welcome!
+
+### Current Maintainers
+- [Studio R4iny](https://github.com/studior4iny)
+    - [jyje](https://github.com/jyje), [semir4in](https://github.com/semir4in) (Same person)
