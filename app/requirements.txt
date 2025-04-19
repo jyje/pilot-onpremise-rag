@@ -1,7 +1,6 @@
 # Core dependencies
 python-dotenv < 1.2
 loguru < 0.8
-wheel < 0.46
 
 # Development
 pytest < 8.4

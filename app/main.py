@@ -2,14 +2,13 @@ import argparse, os
 from dotenv import load_dotenv
 from loguru import logger
 
-# Load environment variables first
 load_dotenv(dotenv_path=os.environ.get('ENV_FILE', '.env'), override=True)
 
-from rag.config import top_parser, common_parser, setup_logger
-from rag.doctor import help as doctor_help, parser as doctor_parser, route as doctor_route
-from rag.train import help as train_help, parser as train_parser, route as train_route
-from rag.ask import help as ask_help, parser as ask_parser, route as ask_route
-from rag.test import help as test_help, parser as test_parser, route as test_route
+from app.rag.config import top_parser, common_parser, setup_logger
+from app.rag.doctor import help as doctor_help, parser as doctor_parser, route as doctor_route
+from app.rag.train import help as train_help, parser as train_parser, route as train_route
+from app.rag.ask import help as ask_help, parser as ask_parser, route as ask_route
+from app.rag.test import help as test_help, parser as test_parser, route as test_route
 
 # Main parser
 parser = argparse.ArgumentParser(
