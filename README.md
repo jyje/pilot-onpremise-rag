@@ -12,6 +12,7 @@
 [![LangChain](https://img.shields.io/badge/LangChain-blue?style=flat&logo=Langchain&logoColor=white)](https://langchain.com)
 [![Milvus](https://img.shields.io/badge/Milvus-red?style=flat&logo=Milvus&logoColor=white)](https://milvus.io/)
 [![MinIO](https://img.shields.io/badge/MinIO-red?style=flat&logo=MinIO&logoColor=white)](https://min.io/)
+[![Build Status](https://github.com/jyje/pilot-onpremise-rag/actions/workflows/build-and-publish.yml/badge.svg)](https://github.com/jyje/pilot-onpremise-rag/actions/workflows/build-and-publish.yml)
 <!-- [![Docker](https://img.shields.io/badge/Docker-blue?style=flat&logo=Docker&logoColor=white)](https://docker.com) -->
 
 </div>
