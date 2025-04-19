@@ -12,6 +12,8 @@
 [![LangChain](https://img.shields.io/badge/LangChain-blue?style=flat&logo=Langchain&logoColor=white)](https://langchain.com)
 [![Milvus](https://img.shields.io/badge/Milvus-red?style=flat&logo=Milvus&logoColor=white)](https://milvus.io/)
 [![MinIO](https://img.shields.io/badge/MinIO-red?style=flat&logo=MinIO&logoColor=white)](https://min.io/)
+
+[![PyPI - Version](https://img.shields.io/pypi/v/pirag?logo=pypi&logoColor=white)](https://pypi.org/project/pirag/)
 [![Build Status](https://github.com/jyje/pilot-onpremise-rag/actions/workflows/build-and-publish.yml/badge.svg)](https://github.com/jyje/pilot-onpremise-rag/actions/workflows/build-and-publish.yml)
 <!-- [![Docker](https://img.shields.io/badge/Docker-blue?style=flat&logo=Docker&logoColor=white)](https://docker.com) -->
 
@@ -23,12 +25,9 @@
 
 ## 🔧 Setup
 
-### (Optional) Setup External Dependencies
+### Install pirag from PyPI
 ```bash
-git clone https://github.com/jyje/pilot-onpremise-rag
-cd pilot-onpremise-rag
-
-docker compose -f docker/compose.yaml up
+pip install pirag
 ```
 
 ### Install pirag from source
@@ -39,9 +38,12 @@ cd pilot-onpremise-rag
 pip install --upgrade -e .
 ```
 
-### Install pirag from PyPI
+### (Optional) Setup External Dependencies
 ```bash
-pip install --upgrade pirag
+git clone https://github.com/jyje/pilot-onpremise-rag
+cd pilot-onpremise-rag
+
+docker compose -f docker/compose.yaml up
 ```
 
 ## 📚 Usage
