@@ -14,7 +14,7 @@ from rag.test import help as test_help, parser as test_parser, route as test_rou
 # Main parser
 parser = argparse.ArgumentParser(
     formatter_class = argparse.ArgumentDefaultsHelpFormatter,
-    description = 'RAG',
+    description = 'Pilot of On-Premise RAG',
     parents = [top_parser],
     add_help = False,
 )
@@ -57,8 +57,7 @@ subparsers.add_parser(
     add_help = False,
 )
 
-
-if __name__ == '__main__':
+def main():
     args = parser.parse_args()
 
     command_message = f"with command: {args.command}" if args.command else ""
@@ -77,3 +76,6 @@ if __name__ == '__main__':
         test_route(args)
     else:
         parser.print_help()
+
+if __name__ == '__main__':
+    main()
