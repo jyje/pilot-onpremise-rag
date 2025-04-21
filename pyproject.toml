@@ -17,6 +17,7 @@ Issue = "https://github.com/jyje/pilot-onpremise-rag/issues"
 
 [project.scripts]
 pirag = "app.main:main"
+pirag-api = "app.api:main"
 
 [build-system]
 requires = [
