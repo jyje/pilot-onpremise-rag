@@ -1,6 +1,6 @@
 [project]
 name = "pirag"
-version = "0.1.7"
+version = "0.2.0"
 description = "CLI Projects of On-Premise RAG. You can use your own LLM and vector DB. Or just add remote LLM servers and vector DB."
 authors = [
     { name="semir4in", email="semir4in@gmail.com" },
@@ -17,7 +17,6 @@ Issue = "https://github.com/jyje/pilot-onpremise-rag/issues"
 
 [project.scripts]
 pirag = "app.main:main"
-pirag-api = "app.api:main"
 
 [build-system]
 requires = [

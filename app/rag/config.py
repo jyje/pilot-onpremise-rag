@@ -1,35 +1,82 @@
-import argparse, os, sys
-from pathlib import Path
+import argparse, sys, pathlib
 from loguru import logger
+from dynaconf import Dynaconf
+from importlib.metadata import version, PackageNotFoundError
+try:
+    __version__ = version("pirag")
+except PackageNotFoundError:
+    __version__ = "0.0.0"
 
-# Logger format constants
+
+# -- Load configuration
+settings = Dynaconf(
+    settings_files = ["settings.yaml"],
+    envvar_prefix = False,
+    load_dotenv = False,
+)
+
+
+# -- Loging
+LOG_LEVEL: str = settings.get("LOG.LEVEL", "INFO").upper()
+if LOG_LEVEL not in ["INFO", "DEBUG", "WARNING", "ERROR", "CRITICAL"]:
+    raise ValueError(f"Invalid log level: {LOG_LEVEL}. Must be one of: INFO, DEBUG, WARNING, ERROR, CRITICAL")
+
+LOG_SAVE: bool = settings.get("LOG.SAVE", False)
+LOG_DIR: str = settings.get("LOG.DIR", ".pirag/logs")
+
 LOG_TIME_FORMAT = "{time:YYYY-MM-DD HH:mm:ss.SSS!UTC}Z"
 LOG_FILE_FORMAT = f"{LOG_TIME_FORMAT} | {{level: <8}} | {{name}}:{{function}}:{{line}} - {{message}}"
 LOG_CONSOLE_FORMAT_FULL = f"<green>{LOG_TIME_FORMAT}</green> | <level>{{level: <8}}</level> | <cyan>{{name}}</cyan>:<cyan>{{function}}</cyan>:<cyan>{{line}}</cyan> - <level>{{message}}</level>\n"
 LOG_CONSOLE_FORMAT_SIMPLE = f"<green>{LOG_TIME_FORMAT}</green> | <level>{{level: <8}}</level> | <level>{{message}}</level>\n"
 
-def setup_logger(log_level: str, log_dir: str):
+
+# -- Serving API
+API_HOST: str = settings.get("API.HOST", "0.0.0.0")
+API_PORT: int = settings.get("API.PORT", 8000)
+API_RELOAD: bool = settings.get("API.RELOAD", True)
+
+
+# -- LLM Server
+LLM_BASE_URL: str = settings.get("LLM.BASE_URL", "http://localhost:11434")
+LLM_API_KEY: str = settings.get("LLM.API_KEY", "llm_api_key")
+LLM_MODEL: str = settings.get("LLM.MODEL", "gemma3:4b")
+
+
+# -- Embedding Server
+EMBEDDING_BASE_URL: str = settings.get("EMBEDDING.BASE_URL", "http://localhost:11434")
+EMBEDDING_API_KEY: str = settings.get("EMBEDDING.API_KEY", "embedding_api_key")
+EMBEDDING_MODEL: str = settings.get("EMBEDDING.MODEL", "nomic-embed-text:latest")
+EMBEDDING_DIMENSION: int = settings.get("EMBEDDING.DIMENSION", 768)
+
+
+# -- Data Warehouse
+MINIO_BASE_URL: str = settings.get("MINIO.BASE_URL", "http://localhost:9000")
+MINIO_ACCESS_KEY: str = settings.get("MINIO.ACCESS_KEY", "minioadmin")
+MINIO_SECRET_KEY: str = settings.get("MINIO.SECRET_KEY", "minioadmin")
+MINIO_BUCKET: str = settings.get("MINIO.BUCKET", "pirag")
+MINIO_REGION: str = settings.get("MINIO.REGION", "us-east-1")
+
+
+# -- Vector Store
+MILVUS_BASE_URL: str = settings.get("MILVUS.BASE_URL", "http://localhost:19530")
+MILVUS_USER: str = settings.get("MILVUS.USER", "milvus")
+MILVUS_PASSWORD: str = settings.get("MILVUS.PASSWORD", "milvus")
+MILVUS_DATABASE: str = settings.get("MILVUS.DATABASE", "milvus_database")
+MILVUS_COLLECTION: str = settings.get("MILVUS.COLLECTION", "milvus_collection")
+MILVUS_METRIC_TYPE: str = settings.get("MILVUS.METRIC_TYPE", "IP")
+
+
+# -- Monitoring
+LANGFUSE_BASE_URL: str = settings.get("LANGFUSE.BASE_URL", "http://localhost:8000")
+LANGFUSE_API_KEY: str = settings.get("LANGFUSE.API_KEY", "langfuse_api_key")
+LANGFUSE_PROJECT_ID: str = settings.get("LANGFUSE.PROJECT_ID", "langfuse_project_id")
+
+
+def setup_logger(log_level: str, log_save: bool, log_dir: str):
     """Configure logger with specified level and outputs"""
-    
-    log_dir = Path(log_dir)
-    log_dir.mkdir(exist_ok=True, parents=True)
-    
+
     logger.remove()
-    
-    # File handler
-    logger.add(
-        sink = log_dir / "{time:YYYYMMDD-HHmmss!UTC}Z.log",
-        level = log_level,
-        rotation = "100 MB",
-        retention = 0,
-        format = LOG_FILE_FORMAT,
-        serialize = False,
-        enqueue = True,
-        backtrace = True,
-        diagnose = True,
-        catch = True
-    )
-    
+
     # Console handler
     logger.add(
         sink = sys.stderr,
@@ -38,114 +85,40 @@ def setup_logger(log_level: str, log_dir: str):
         colorize = True
     )
 
+    if log_save:
+        log_dir = pathlib.Path(log_dir)
+        log_dir.mkdir(exist_ok=True, parents=True)
 
-class EnvDefault(argparse.Action):
-    """Custom argparse action that uses environment variables as defaults.
-
-    This action extends the standard argparse.Action to support reading default values
-    from environment variables. If the specified environment variable exists, its value
-    will be used as the default value for the argument.
-
-    For boolean flags (store_true/store_false), the environment variable is interpreted
-    as a boolean value where 'true', '1', 'yes', or 'on' (case-insensitive) are
-    considered True.
-
-    Args:
-        envvar (str): Name of the environment variable to use as default
-        required (bool, optional): Whether the argument is required. Defaults to True.
-            Note: If a default value is found in environment variables, required is set to False.
-        default (Any, optional): Default value if environment variable is not set. Defaults to None.
-        **kwargs: Additional arguments passed to argparse.Action
-
-    Example:
-        ```python
-        parser.add_argument(
-            '--log-level',
-            envvar='LOG_LEVEL',
-            help='Logging level',
-            default='INFO',
-            action=EnvDefault
+        # File handler
+        logger.add(
+            sink = log_dir / "{time:YYYYMMDD-HHmmss!UTC}Z.log",
+            level = log_level,
+            rotation = "100 MB",
+            retention = 0,
+            format = LOG_FILE_FORMAT,
+            serialize = False,
+            enqueue = True,
+            backtrace = True,
+            diagnose = True,
+            catch = True
         )
-        ```
-
-    Note:
-        The help text is automatically updated to include the environment variable name.
-    """
-    def __init__(self, envvar, required=True, default=None, **kwargs):
-        if envvar and envvar in os.environ:
-            env_value = os.environ[envvar]
-            # Convert string environment variable to boolean
-            if kwargs.get('nargs') is None and kwargs.get('const') is not None:  # store_true/store_false case
-                default = env_value.lower() in ('true', '1', 'yes', 'on')
-            else:
-                default = env_value
-            logger.debug(f"Using {envvar}={default} from environment")
-        
-        if envvar:
-            kwargs["help"] += f" (envvar: {envvar})"
-        
-        if required and default:
-            required = False
-            
-        super(EnvDefault, self).__init__(default=default, required=required, **kwargs)
-        self.envvar = envvar
-
-    def __call__(self, parser, namespace, values, option_string=None):
-        setattr(namespace, self.dest, values if values is not None else self.default)
 
 
-# Top-level parser with common options
+# Top-level parser 
 top_parser = argparse.ArgumentParser(add_help=False)
-
 top_parser.add_argument(
-    '-h', '--help',
-    help = 'Show help message and exit',
+    "-v", "--version",
+    help = "Show the `pirag` application's version and exit",
+    action = "version",
+    version = f"{__version__}",
+)
+
+
+# Common parser
+common_parser = argparse.ArgumentParser(add_help=False)
+common_parser.add_argument(
+    "-h", "--help",
+    help = "Show help message and exit",
     default = argparse.SUPPRESS,
-    action = 'help',
-)
-
-top_parser.add_argument(
-    '--env-file',
-    envvar = 'ENV_FILE',
-    help = 'Path to environment file',
-    default = '.env',
-    type = str,
-    action = EnvDefault,
-)
-
-top_parser.add_argument(
-    '--log-level',
-    envvar = 'LOG_LEVEL',
-    help = 'Logging level',
-    default = 'INFO',
-    type = lambda x: x.upper(),
-    choices = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-    required = False,
-    action = EnvDefault,
-)
-
-top_parser.add_argument(
-    '--log-dir',
-    envvar = 'LOG_DIR',
-    help = 'Path to log directory',
-    default = '.pirag/logs',
-    type = str,
-    required = False,
-    action = EnvDefault,
-)
-
-top_parser.add_argument(
-    '--log-save',
-    envvar = 'LOG_SAVE',
-    help = 'Save log to file. If this flag is set, the log will be saved to the file specified in the `--log-path`.',
-    default = False,
-    const = True,
-    nargs = 0,
-    type = bool,
-    required = False,
-    action = EnvDefault,
-)
-
-common_parser = argparse.ArgumentParser(
-    add_help = False,
+    action = "help",
 )

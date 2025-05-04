@@ -1,0 +1,46 @@
+# -- Logging
+log:
+  level: DEBUG # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  save: false
+  dir: .pirag/logs
+
+# -- Serving API
+api:
+  port: 3000
+  reload: true
+
+# -- LLM Server
+llm:
+  base_url: "http://localhost:1234/v1"
+  api_key: "llm"
+  model: "gemma-3-4b-it"
+
+# -- Embedding Server
+embedding:
+  base_url: "http://localhost:1234/v1"
+  api_key: "embedding"
+  model: "text-embedding-intfloat-multilingual-e5-large-instruct"
+  dimension: 768
+
+# -- Data Warehouse
+minio:
+  base_url: "http://localhost:9000"
+  access_key: "minio"
+  secret_key: "minio"
+  bucket: "pirag"
+  region: "us-east-1"
+
+# -- Vector Store
+milvus:
+  base_url: "http://localhost:19530"
+  user: "milvus"
+  password: "milvus"
+  database: "default"
+  collection: "my_collection"
+  metric_type: "IP"
+
+# -- Monitoring
+langfuse:
+  base_url: "http://localhost:8000"
+  api_key: "langfuse_api_key"
+  project_id: "langfuse_project_id"

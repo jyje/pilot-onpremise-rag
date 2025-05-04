@@ -21,9 +21,9 @@ services:
     environment:
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
-    ports:
-      - 19001:9001
-      - 19000:9000
+    # ports:
+    #   - 19001:9001
+    #   - 19000:9000
     volumes:
       - vectordb-milvus-minio-data:/minio_data
     command: minio server /minio_data --console-address ":9001"
@@ -53,7 +53,7 @@ services:
       retries: 3
     ports:
       - 19530:19530
-      - 19091:9091
+      # - 19091:9091
     depends_on:
       - vectordb-milvus-etcd
       - vectordb-milvus-minio

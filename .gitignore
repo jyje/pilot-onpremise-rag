@@ -1,6 +1,10 @@
 ## App
 .pirag/
 
+# Ignore dynaconf secret files
+.secrets.yaml
+
+
 ## Python
 # Byte-compiled / optimized / DLL files
 __pycache__/

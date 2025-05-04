@@ -1,14 +1,9 @@
+import os, tomli
 from setuptools import setup, find_packages
-import os, sys
-import tomli
 
 # Load requirements
 with open(os.path.join(os.path.dirname(__file__), 'requirements.txt'), 'r') as f:
     requirements = [line.strip() for line in f if line.strip() and not line.startswith('#')]
-
-# Load API requirements
-with open(os.path.join(os.path.dirname(__file__), 'requirements.api.txt'), 'r') as f:
-    api_requirements = [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
 # Get version from pyproject.toml
 with open(os.path.join(os.path.dirname(__file__), '../pyproject.toml'), 'rb') as f:
@@ -23,13 +18,9 @@ setup(
     packages = find_packages(),
     include_package_data = True,
     install_requires = requirements,
-    extras_require = {
-        "api": api_requirements,
-    },
     entry_points = {
         "console_scripts": [
             f"{APP_NAME}=app.cli:main",
-            f"{APP_NAME}-api=app.api:main",
         ],
     },
 )
