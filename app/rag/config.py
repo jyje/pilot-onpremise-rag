@@ -40,12 +40,14 @@ API_RELOAD: bool = settings.get("API.RELOAD", True)
 LLM_BASE_URL: str = settings.get("LLM.BASE_URL", "http://localhost:11434")
 LLM_API_KEY: str = settings.get("LLM.API_KEY", "llm_api_key")
 LLM_MODEL: str = settings.get("LLM.MODEL", "gemma3:4b")
+LLM_SERVER_TYPE: str = settings.get("LLM.SERVER_TYPE", "openai")
 
 
 # -- Embedding Server
 EMBEDDING_BASE_URL: str = settings.get("EMBEDDING.BASE_URL", "http://localhost:11434")
 EMBEDDING_API_KEY: str = settings.get("EMBEDDING.API_KEY", "embedding_api_key")
 EMBEDDING_MODEL: str = settings.get("EMBEDDING.MODEL", "nomic-embed-text:latest")
+EMBEDDING_SERVER_TYPE: str = settings.get("EMBEDDING.SERVER_TYPE", "openai")
 EMBEDDING_DIMENSION: int = settings.get("EMBEDDING.DIMENSION", 768)
 
 
@@ -121,4 +123,22 @@ common_parser.add_argument(
     help = "Show help message and exit",
     default = argparse.SUPPRESS,
     action = "help",
+)
+
+
+# Chat parser
+chat_parser = argparse.ArgumentParser(add_help=False)
+chat_parser.add_argument(
+    "-n", "--no-rag",
+    help = "Do not use RAG to answer the question. Just use the LLM to answer the question.",
+    action = "store_true",
+)
+
+
+# Doctor parser
+doctor_parser = argparse.ArgumentParser(add_help=False)
+doctor_parser.add_argument(
+    "-r", "--resolve",
+    help = "Resolve the issue",
+    action = "store_true",
 )

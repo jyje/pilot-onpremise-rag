@@ -3,7 +3,7 @@ from loguru import logger
 import app.rag.config as cfn
 from .client import client
 
-def doctor():
+def doctor(resolve: bool):
     # Check connection
     is_connected = client.check_connection()
     if not is_connected:

@@ -2,7 +2,7 @@ import requests
 from langchain_openai.embeddings import OpenAIEmbeddings
 
 import app.rag.config as cfn
-from app.rag.utils import connection_check
+from app.rag.utilities import connection_check
 
 
 class EmbeddingClient:

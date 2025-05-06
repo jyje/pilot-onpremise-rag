@@ -3,7 +3,7 @@ from pymilvus import MilvusClient
 from pymilvus.exceptions import MilvusException
 
 import app.rag.config as cfn
-from app.rag.utils import connection_check
+from app.rag.utilities import connection_check
 
 
 class VectorStoreClient(MilvusClient):
@@ -38,6 +38,9 @@ class VectorStoreClient(MilvusClient):
         try:
             requests.head(url=self.base_url, timeout=5)
         except requests.exceptions.ConnectionError:
+            self._is_connected = False
+            return False
+        except requests.exceptions.ReadTimeout:
             self._is_connected = False
             return False
         self._is_connected = True

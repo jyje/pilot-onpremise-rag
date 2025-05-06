@@ -1,10 +1,12 @@
 import uvicorn
-from fastapi import FastAPI, Request, Depends, HTTPException, Query
+from fastapi import FastAPI, APIRouter, Request, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from loguru import logger
 import app.rag.config as cfn
-from app.rag.v1.router import router as core_router
+
+from app.rag.routers import system_router
+from app.rag.v1.routers import router as v1_router
 
 # Initialize FastAPI app
 api = FastAPI(
@@ -22,26 +24,14 @@ api.add_middleware(
     allow_headers=["*"],
 )
 
+api.include_router(router=system_router, prefix="", tags=["System"])
+api.include_router(router=v1_router, prefix="/v1")
 
-@api.get("/")
-async def _():
-    return {"message": "RAG API is running"}
-
-
-@api.get("/livez")
-async def _():
-    return {"status": "ok"}
-
-
-@api.get("/readyz")
-async def _():
-    return {"status": "ok"}
-
-api.include_router(router=core_router, prefix="/v1")
-
-def serve():
+def serve(parser_options=None):
     print("Serving the RAG API...")
-    print(cfn.API_HOST, cfn.API_PORT, cfn.API_RELOAD)
+    if parser_options:
+        logger.debug(f"Serve parser options: {parser_options}")
+        
     uvicorn.run(
         app = "app.rag.api:api",
         host = cfn.API_HOST,

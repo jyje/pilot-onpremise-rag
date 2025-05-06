@@ -2,7 +2,7 @@
 .pirag/
 
 # Ignore dynaconf secret files
-.secrets.yaml
+settings.yaml
 
 
 ## Python

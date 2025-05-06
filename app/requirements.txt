@@ -8,3 +8,5 @@ uvicorn < 0.35
 # RAG
 ragas < 0.3
 pymilvus < 2.6
+langchain-openai < 0.4
+langchain-ollama < 0.4

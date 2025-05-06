@@ -6,7 +6,7 @@ def connection_check(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         try:
-            requests.head(url=self.base_url, timeout=5)
+            requests.head(url=self.base_url, timeout=1)
             self._is_connected = True
             return func(self, *args, **kwargs)
         except requests.exceptions.ConnectionError:
